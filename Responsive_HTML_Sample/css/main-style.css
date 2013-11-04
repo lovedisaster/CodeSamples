@@ -1,0 +1,101 @@
+
+/* --------------------------------------
+   Global
+-------------------------------------- */
+ul li { list-style: none; }
+img{margin:0;padding:0;display:block;}
+
+/* --------------------------------------
+   Header
+-------------------------------------- */
+/* Index page */
+.top_bar{-moz-box-shadow: 0px 5px 5px #888;-webkit-box-shadow: 0px 5px 5px #888;box-shadow: 0px 5px 5px #888;padding:0;margin:0;min-height:30px;}
+.navbar{border-width:0px;background-color:#fff;}
+.navbar-default .navbar-nav > li > a{color:rgb(114,21,127);}
+.navbar-default .navbar-nav > .active > a,.navbar-default .navbar-nav > .active > a:hover{color:rgb(239, 129, 78);background-color:#fff;}
+.navbar-brand{padding:0;margin:0;}
+.btn-default{color:#fff;background-color:rgb(114,21,127);}
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default{background-color:#fff;border:1px solid rgb(114,21,127);color:rgb(114,21,127);}
+.form-control{border:1px rgb(114,21,127) solid;color:rgb(114,21,127);}
+.form-control:focus {border-color: rgb(114,21,127);outline: 0px none; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(114,21,127, 0.6);}
+/* --------------------------------------
+   Content Styles
+-------------------------------------- */
+/* Our Story */
+.our_story_body{width:100%;min-height:500px;padding-top:100px;text-align:center;}
+.our_story_body p{ width:50%;min-width:150px;margin:0 auto;}
+.our_story_body h1{color:rgb(114,21,127);margin-bottom:30px;font-size:70px;font-weight:lighter;}
+.our_story_body .row{margin-left:0px;}
+.our_story_body_open{padding-top:30px;}
+.our_story_body_open h1{margin-bottom:12px;}
+.our_story_body_open .heading{width:97.5%}
+.our_story_body_open .heading{border-bottom:2px solid rgb(114,21,127);text-align:left;}
+.our_story_body_open .storypost h2{color:rgb(239,129,78);bold;width:80%;line-height:150%;text-align:left;}
+.our_story_body_open .storypost p{color:rgb(114,21,127);font-weight:bold;width:80%;line-height:160%;text-align:left;padding:0;margin:0;}
+.our_story_body_open h1{color:rgb(114,21,127);font-size:50px;font-weight:lighter;margin-bottom:30px;}
+.our_story_body_open .storypost ul,.our_story_body_open .storypost ul li{margin:0;padding:0;}
+.our_story_body_open .storypost img{width:99%;margin-top:30px;}
+.our_story_body_open .storypost .story p{margin-top:30px;} 
+.slider_bullet ul li{float:left;width:20px;height:20px;background:url('../img/bullet_empty.png') no-repeat;margin:20px 5px;}
+.slider_bullet ul li.active{background:url('../img/solid_bullet.png') no-repeat;}
+.our_story_body_open .storypost .slider_bullet ul li{float:left;width:20px;height:20px;background:url('../img/bullet_empty.png') no-repeat;margin:20px 5px;}
+.our_story_body_open .storypost .slider_bullet ul li.active{background:url('../img/solid_bullet.png') no-repeat;}
+
+/* --------------------------------------
+   Footer 
+-------------------------------------- */
+.footer{ margin-top:50px;
+  /* Gradiation doesn't work on IE, this is a fallback solution*/
+  background-color:rgb(114,21,127);
+  background-repeat: repeat-x;
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f19067;), to(#92328d));
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(top, #f19067, #92328d);
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(top, #f19067, #92328d);
+  /* IE 10 */
+  background: -ms-linear-gradient(top, #f1906;, #92328d);
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(top, #f19067, #92328d);
+  min-height:303px;
+  padding-top:30px;
+}
+.footer .footerPost{color:#fff;}
+.footer .container .row .footerPost h4{font-size:22px;}
+.footer .container .row .footerPost p{font-size:14px;}
+.footer .container .row .links .link{max-width:350px;}
+.footer .container .row .links h2{color:#fff;font-size:26px;font-weight:normal;line-height:140%;}
+.footer .container .row .links h3{color:rgb(114,21,127);}
+.footer ul li{float:left; margin:20px 10px 0 0;}
+.bottomLinks{margin-top:50px;}
+.socialLinks{float:left;}
+.socialLinks ul{margin:0; padding:0;}
+.socialLinks ul li{margin:15px 10px 0 0; padding:0;}
+.socialLinks ul li a:hover{opacity:0.4;filter:alpha(opacity=40);}
+.socialLinks img{width:27px;} 
+.socialLinks h4{color:#fff;text-transform:uppercase;margin-top:3px;}
+.policy ul li{margin:20px 30px 0 0;}
+.policy ul li a{color:#fff;}
+.policy .row{margin-left:0px;}
+.policy .col-lg-6,.policy .col-xs-12{padding-left:0;}
+
+/* Our Story */
+.footer .please_select img{width:320px;margin-top:-57px;}
+.footer .meet_the_team{text-align:center;color:#fff;margin-top:50px;min-height:250px;}
+.footer .MTT_closed{text-align:center;color:#fff;margin-top:-10px;min-height:80px;}
+.footer .meet_the_team h1{font-size:5.5vw;}
+/* --------------------------------------
+   Yoke Credit
+-------------------------------------- */
+a.credit { width: 96px; height: 19px; font: 10px Arial, Helvetica, sans-serif; float: right; }
+a.credit span {	background-image: url(''); }
+
+/* Media Queries **/
+@media (min-width: 1200px) {/* Put you customized css in the corresponding media query */ }
+@media (min-width: 980px) and (max-width: 1199px) {}
+@media (min-width: 768px) and (max-width: 979px) {}
+@media (max-width: 767px) {form.navbar-form{display:none;}}
+@media (max-width: 480px) {}
+
+
