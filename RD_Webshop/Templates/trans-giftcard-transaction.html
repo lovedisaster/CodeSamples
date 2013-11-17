@@ -1,0 +1,488 @@
+<script language="javascript">
+ $(document).ready(function() {
+   $('input#addtransaction').click(function(){
+       $('div#trans-giftcard-transaction-validate').slideDown('slow'); 
+       $('input#addtransaction').fadeOut('slow'); 
+   }); 
+    
+   //Confirm redemption amount and add transaction record to list.  
+   $('#gcard-trans-confirm').click(function(){
+        $('ul#ajaxmessages').slideUp('fast'); 
+        $('div#tranwaitting').show();
+        $('div#tranresult').hide();
+        $.ajax({
+            type : 'POST',
+            url : '/ajax/trans-giftcard-ajaxcontroller.php',
+            dataType : 'json',
+            data: {
+                cardNo : $('input#gcard-trans-cardno').val(),
+                amount : $('input#gcard-trans-amount-input').val(),
+                type : 'insert'
+            }, 
+             
+            success : function(data){
+                if(data.error === false){
+                //Insert a row to transaction list table
+                 $("#gcard-trans-list-table").find('tbody')
+                    .append($('<tr>')
+                        .attr('id',data.doclineid)
+                        .attr('class','recordrow')
+                        //image column
+                        .append($('<td>')                        
+                        .append($('<div>')
+                            .attr('class',data.doclineid)
+                        .append($('<a>')
+                            .attr('class','delete')
+                            .attr('id',data.doclineid)
+                            .attr('name',$('input#gcard-trans-cardno').val()))))
+                            
+                        //card number column
+                        .append($('<td>')
+                        .append($('<div>')
+                            .attr('class',data.doclineid)
+                            .text($('input#gcard-trans-cardno').val())))
+                        //amount column
+                        .append($('<td>')
+                        .append($('<div>')
+                            .attr('class',data.doclineid)
+                            .attr('align','right')
+                            .text('({CURRENCY})'+data.transamount)))
+                    
+                   );
+
+                 $('div#trans-giftcard-transaction-carddetail').slideUp('slow');
+                 $('input#cardNumber').val('');
+                 $('input#gcard-trans-cardno').val('');
+                 $('div#valresult').hide();
+                 $('div#trans-giftcard-transaction-validate').slideUp('slow');  
+                 $('h2#outstanding-amount').text(data.amountdue);
+                  $('div#tranwaitting').hide();
+                 if(data.amountdue > 0){
+                 $('input#addtransaction').fadeIn('slow');
+                 $('tr#giftcard').fadeIn(500 ,function(){
+                 });        
+                 }
+                 
+                 if(data.iscompleted === true){//amount to pay is zero
+                     $('div#trans-giftcard-transaction-select').slideUp('fast');
+                     $('div#trans-giftcard-transaction-confirm').slideDown('slow');
+                     $('tr#giftcard').fadeIn(500 ,function(){
+                         $('div#trans-giftcard-transaction-selectdiv').slideUp('fast');
+                     });                     
+                 }
+                }else{//failed
+                    $('div#tranwaitting').hide();
+                    $('ul#ajaxmessages li').text(data.msg); 
+                    $('ul#ajaxmessages').slideDown(300);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                $('#tranwaitting').hide();
+                $('ul#ajaxmessages li').text(data.msg); 
+                $('ul#ajaxmessages').slideDown(300);
+                $('div#trans-giftcard-transaction-carddetail').slideUp('fast');
+            }
+        });        
+        return false;
+     
+   });
+   
+   
+   
+   //Live click can found dynamic generated html elements.
+   $("a.delete").live('click', function() {
+    $('ul#ajaxmessages').slideUp('fast'); 
+    $id = this.id;
+    $name = this.name;
+    $.ajax({
+            type : 'POST',
+            url : '/ajax/trans-giftcard-ajaxcontroller.php',
+            dataType : 'json',
+            data: {
+                cardNo : $name,
+                docLineId : $id,
+                type : 'delete'
+            }, 
+            beforeSend: function() {
+            },
+             
+            success : function(data){
+                if(data.error === false){
+                //Delete a clicked row from transaction list table   
+                 $('ul#ajaxmessages').slideUp('fast'); 
+                 $('div.'+$id).slideUp(500 ,function(){
+                    $('tr#'+$id).remove();  
+                 });     
+                 $('input#cardNumber').val('');
+                 $('input#gcard-trans-cardno').val('');
+                 $('div#valresult').hide();
+                 $('h2#outstanding-amount').text(data.amountdue);
+                 $('input#addtransaction').fadeIn('slow');     
+                 $('div#trans-giftcard-transaction-select').slideDown('slow');
+                 $('div#trans-giftcard-transaction-confirm').fadeOut('fast'); 
+                 if(data.isbanktransexisted === true){
+                    $('div#trans-giftcard-transaction-validate').slideDown('slow');  
+                 }else{
+                    $('div#trans-giftcard-transaction-selectdiv').slideDown('slow');                     
+                 }
+                }else{
+                    //failed
+                    $('ul#ajaxmessages li').text(data.msg); 
+                    $('ul#ajaxmessages').slideUp('fast');  
+                    $('ul#ajaxmessages').slideDown(300);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                $('ul#ajaxmessages li').text(data.msg); 
+                $('ul#ajaxmessages').slideUp('fast');  
+                $('ul#ajaxmessages').slideDown(300);
+            }
+            
+        });        
+        return false;
+  });
+   
+   $('input#validate').click(function() {
+        $('ul#ajaxmessages').slideUp('fast'); 
+        $('div#valwaitting').show();
+        $('div#valresult').hide();
+        $.ajax({
+            type : 'POST',
+            url : '/ajax/trans-giftcard-validator.php',
+            dataType : 'json',
+            data: {
+                cardNo : $('input#cardNumber').val()
+            },  
+            success : function(data){
+                $('#valwaitting').hide();
+                if(data.error === false){
+                $('#valresult').removeClass().addClass('gcard-validation-result-invalid')
+                    .text(data.msg).show();
+                $('div#trans-giftcard-transaction-carddetail').slideUp('fast');  
+                }
+                else{//validation passed 
+                    $('div#trans-giftcard-transaction-carddetail').slideUp('fast');                 
+                    $('#gcard-trans-cardno').val($('#cardNumber').val());
+                    $('td#giftcardnumber').text(data.cardNo);
+                    $('td#giftcardbalance').text('({CURRENCY})'+data.balance);
+                    $('input#gcard-trans-amount-input').val(data.defaultValue);                    
+                    $('div#trans-giftcard-transaction-carddetail').slideDown('slow');                     
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                $('#valwaitting').hide();
+                $('#valresult').removeClass().addClass('gcard-validation-result-invalid')
+                    .text('Invalid card number.').show();
+                $('div#trans-giftcard-transaction-carddetail').slideUp('fast');  
+            }
+        });
+        
+        return false;
+    });
+    
+    //show gift card input div
+    $('input#addgcard').click(function() { 
+        $('ul#ajaxmessages').slideUp('fast'); 
+        $('tr#giftcard').fadeOut(500 ,function(){
+            $('div#trans-giftcard-transaction-validate').slideDown('slow');  
+        });   
+    }); 
+    
+    
+    //when mockpayment is clicked
+    $('input#addmock').click(function() { 
+        $('ul#ajaxmessages').slideUp('fast'); 
+        $.ajax({
+            type : 'POST',
+            url : '/ajax/trans-giftcard-ajaxcontroller.php',
+            dataType : 'json',
+            data: {
+                type : 'add-bank-trans',
+                transname:'mock'
+            }, 
+             
+            success : function(data){
+                if(data.error === false){
+                     $("#gcard-trans-list-table").find('tbody')
+                    .append($('<tr>')
+                        .attr('id','bank-delete')
+                        .attr('class','recordrow')
+                        //image column
+                        .append($('<td>')                        
+                        .append($('<div>')
+                            .attr('class','bank-delete')
+                        .append($('<a>')
+                            .attr('class','bank-delete')
+                            .attr('id','bank-delete')
+                            )))
+                        //card number column
+                        .append($('<td>')
+                        .append($('<div>')
+                            .attr('class','bank-delete')
+                            .text('Mock Payment')))
+                        //amount column
+                        .append($('<td>')
+                        .append($('<div>')
+                            .attr('class','bank-delete')
+                            .attr('align','right')
+                            .text('({CURRENCY})'+data.transamount)))
+                    );
+                    $('div#trans-giftcard-transaction-validate').slideUp('fast'); 
+                    $('div#trans-giftcard-transaction-carddetail').slideUp('fast');
+                    $('div#trans-giftcard-transaction-selectdiv').slideUp('fast');  
+                    $('div#trans-giftcard-transaction-confirm').slideDown('slow');
+                    $('h2#outstanding-amount').text(data.amountdue);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                $('ul#ajaxmessages li').text(data.msg); 
+                $('ul#ajaxmessages').slideUp('fast');  
+                $('ul#ajaxmessages').slideDown(300);
+            }
+            
+        });        
+        return false;
+    }); 
+    
+    //when paypal is clicked
+    $('input#addpaypal').click(function() { 
+        $('ul#ajaxmessages').slideUp('fast'); 
+        $.ajax({
+            type : 'POST',
+            url : '/ajax/trans-giftcard-ajaxcontroller.php',
+            dataType : 'json',
+            data: {
+                type : 'add-bank-trans',
+                transname:'paypal'
+            }, 
+             
+            success : function(data){
+                if(data.error === false){
+                     $("#gcard-trans-list-table").find('tbody')
+                    .append($('<tr>')
+                        .attr('id','bank-delete')
+                        .attr('class','recordrow')
+                        //image column
+                        .append($('<td>')                        
+                        .append($('<div>')
+                            .attr('class','bank-delete')
+                        .append($('<a>')
+                            .attr('class','bank-delete')
+                            .attr('id','bank-delete')
+                            )))
+                        //card number column
+                        .append($('<td>')
+                        .append($('<div>')
+                            .attr('class','bank-delete')
+                            .text('Paypal')))
+                        //amount column
+                        .append($('<td>')
+                        .append($('<div>')
+                            .attr('class','bank-delete')
+                            .attr('align','right')
+                            .text('({CURRENCY})'+data.transamount)))
+                    );
+                    $('div#trans-giftcard-transaction-validate').slideUp('fast'); 
+                    $('div#trans-giftcard-transaction-carddetail').slideUp('fast');
+                    $('div#trans-giftcard-transaction-selectdiv').slideUp('fast');  
+                    $('div#trans-giftcard-transaction-confirm').slideDown('slow');
+                    $('h2#outstanding-amount').text(data.amountdue);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                $('ul#ajaxmessages li').text(data.msg); 
+                $('ul#ajaxmessages').slideUp('fast');  
+                $('ul#ajaxmessages').slideDown(300);
+            }
+            
+        });        
+        return false;
+    }); 
+    
+    //delete bank trans row
+   $("a.bank-delete").live('click', function() {
+    $('ul#ajaxmessages').slideUp('fast'); 
+    $id = this.id;
+    $name = this.name;
+    $.ajax({
+            type : 'POST',
+            url : '/ajax/trans-giftcard-ajaxcontroller.php',
+            dataType : 'json',
+            data: {
+                lastransamount : $name,
+                type : 'delete-bank-trans'
+            }, 
+             
+            success : function(data){
+                if(data.error === false){
+                //Delete a clicked row from transaction list table   
+                 $('div.'+$id).slideUp(500 ,function(){
+                    $('tr#'+$id).remove();  
+                 });     
+                 $('h2#outstanding-amount').text(data.amountdue);
+                 $('div#trans-giftcard-transaction-confirm').fadeOut('fast'); 
+                 $('div#trans-giftcard-transaction-selectdiv').slideDown('slow');
+                 $('div#trans-giftcard-transaction-validate').slideUp('fast');
+                 $('div#trans-giftcard-transaction-carddetail').slideUp('fast'); 
+                 $('tr#giftcard').fadeIn('slow');
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                $('ul#ajaxmessages li').text(data.msg); 
+                $('ul#ajaxmessages').slideUp('fast');  
+                $('ul#ajaxmessages').slideDown(300);
+            }
+            
+        });        
+        return false;
+  });
+    
+});
+ 
+ // This adds 'placeholder' to the items listed in the jQuery .support object. 
+jQuery(function() {
+   jQuery.support.placeholder = false;
+   test = document.createElement('input');
+   if('placeholder' in test) jQuery.support.placeholder = true;
+});
+
+// This adds placeholder support to browsers that wouldn't otherwise support it. 
+$(function() {
+   if(!$.support.placeholder) { 
+      var active = document.activeElement;
+      $(':text').focus(function () {
+         if ($(this).attr('placeholder') != '' && $(this).val() == $(this).attr('placeholder')) {
+            $(this).val('').removeClass('hasPlaceholder');
+         }
+      }).blur(function () {
+         if ($(this).attr('placeholder') != '' && ($(this).val() == '' || $(this).val() == $(this).attr('placeholder'))) {
+            $(this).val($(this).attr('placeholder')).addClass('hasPlaceholder');
+         }
+      });
+      $(':text').blur();
+      $(active).focus();
+      $('form:eq(0)').submit(function () {
+         $(':text.hasPlaceholder').val('');
+      });
+   }
+});
+</script>
+<ul id="ajaxmessages">
+    <li class="ajaxmessages"></li>
+</ul>
+<div id="trans-giftcard-transaction-right">  
+    <div id="trans-giftcard-transaction-left-sotable">
+        <table class="trans-tables" id='gcard-trans-cardntransinform'>
+        <tr>
+            <td class="head"><h2>Sales Order</h2></td>
+            <td align="right" class="head" width='500'><h2>Total</h2></td>
+        </tr>
+        <tr class="data">
+            <td  class="data">{SALESORDERCODE}</td>
+            <td align="right"  class="data">({CURRENCY}){TOTAL}</td>    
+        </tr>
+        </table>
+    </div>
+    <div id="trans-giftcard-transaction-left-transheading">
+        <h2 id='pendingHeading'>Payments</h2>
+    </div>
+    <div id="trans-giftcard-transaction-left-transtable">
+        <table class="trans-tables" id='gcard-trans-list-table'>            
+            <thead>
+            <tr>
+                <td class="head" width="80"><h2>Remove</h2></td>
+                <td class="head" width="120"><h2>Details</h2></td>                
+                <td align="right" class="head" width='380'><h2>Amount</h2></td>
+            </tr>
+            </thead>
+            <tbody>
+                <!--Javascript will insert transaction rows here.-->
+            </tbody>
+        </table>
+    </div> 
+    
+    <div id="trans-giftcard-transaction-left-amountdue">
+        <h2 class="outstanding-amount" id="outstanding-amount">{AMOUNTTOPAY}</h2>
+        <h2 class="outstanding-amount">Amount Due:({CURRENCY})</h2>
+    </div>
+</div>
+
+<div id="trans-giftcard-transaction-left">
+
+<div class="trans-giftcard-transaction-leftdivs" id="trans-giftcard-transaction-validate">
+        <table id='trans-giftcard-transaction-right-validatetable'>
+            <tr>
+                <td class="middlecell" width="300" align="right"><input id="cardNumber" name="cardnumber" type="text" size="22" placeholder="Gift card number"></td>                
+                <td class="rightedge" width="10" align="left"><input type="button" id="validate" class="submit" value="Validate"></td>
+            </tr> 
+        </table>
+        <div class='gcard-validation' id='valresult'></div>
+        <div class='gcard-validation' id='valwaitting'><img src="/img/loading.gif"></div>
+    </div>  
+      
+    <div class="trans-giftcard-transaction-leftdivs" id="trans-giftcard-transaction-carddetail">
+        <table class="trans-tables" id='gcard-trans-cardntransinform'>
+            <tr>
+                <td><h2>Gift Card</h2></td>
+                <td align="right" width="400"><h2>Available Balance</h2></td>
+            </tr>
+            <tr class="data">
+                <td class="data" id="giftcardnumber">{VOUCHERCODE}</td>
+                <td align="right" class="data" id="giftcardbalance">({CURRENCY}){BALANCE}</td>    
+            </tr>
+            <tr>
+            <td align="right">To Redeem({CURRENCY}):</td>
+            <td align="right">
+             <input id="gcard-trans-cardno" name="cardNo" type="text" value="{VOUCHERCODE}">
+             <input id="gcard-trans-amount-input" name="amount" type="text" size="8" value="{DEFAULTVALUE}">
+            </td>
+        </tr>
+        <tr>
+            <td align="right" width="210"></td>
+            <td align="right" width="140">
+             <input id="gcard-trans-confirm" type="submit" class="submit" value="Add transaction">
+            </td>
+        </tr>        
+        </table>
+        <div class='gcard-validation' id='tranresult'></div>
+        <div class='gcard-validation' id='tranwaitting'><img src="/img/loading.gif"></div>        
+    </div>
+    
+    <div class="trans-giftcard-transaction-leftdivs" id='trans-giftcard-transaction-selectdiv'>
+        <table id='trans-giftcard-transaction-right-selection'>
+            <tr id="giftcard">
+                <td class="leftedge" width="70">
+                <div class="bank-trans-entry-translogo">
+                <img src="/img/giftcard-icon.jpg">
+                </div></td>
+                <td class="paymentselect" align="left"><input type="button" id="addgcard" class="addtrans"></td>
+                <td class="paymentselectright" width="400" align="left"><h2>Gift Card</h2></td>
+            </tr>
+            <tr id="mock">
+                <td class="leftedge"  width="60">
+                <div class="bank-trans-entry-translogo">
+                <img src="/img/mock-icon.jpg">
+                </div></td>
+               <td class="paymentselect" width="592" align="left"><input type="button" id="addmock" class="addtrans"></td>
+               <td class="paymentselectright" width="400" align="left"><h2>Secured Pay</h2></td>
+            </tr>
+            <tr id="paypal">
+                <td class="leftedge">
+                <div class="bank-trans-entry-translogo">
+                    <img src="/img/paypal-icon.jpg">
+                </div></td>
+
+                <td class="paymentselect" align="left"><input type="button" id="addpaypal" class="addtrans"></td>
+                <td class="paymentselectright" width="400" align="left"><h2>Paypal</h2></td>
+            </tr>        
+        </table>
+    </div>
+
+    <div class="trans-giftcard-transaction-leftdivs" id="trans-giftcard-transaction-confirm">
+        <form action="/trans-giftcard-seperator/" method="post">
+        <p>Your outstanding amount has been cleared. Click confirm to complete this transaction.</p>
+        <input id="gcard-confirm-submit" class="submit" type="submit" value="Confirm">
+        </form>
+    </div>
+</div>
+

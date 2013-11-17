@@ -1,0 +1,118 @@
+<script language="javascript">
+ $(document).ready(function() {
+    $('input#bank-trans-entry-giftcard').click(function(){
+        $('div#trans-entry-giftcard-message').slideDown('slow');
+        $('div#trans-entry-mock-message').slideUp('fast');
+        $('div#trans-entry-paypal-message').slideUp('fast');
+        $('input#trans-entry-right-nextbutton').hide();
+        $('input#trans-entry-right-nextbutton').fadeIn('slow');
+        
+    });
+    
+    $('input#bank-trans-entry-mock').click(function(){
+        $('div#trans-entry-giftcard-message').slideUp('fast');
+        $('div#trans-entry-mock-message').slideDown('slow');
+        $('div#trans-entry-paypal-message').slideUp('fast');
+        $('input#trans-entry-right-nextbutton').hide();
+        $('input#trans-entry-right-nextbutton').fadeIn('slow');
+    });
+    
+    $('input#bank-trans-entry-paypal').click(function(){
+        $('div#trans-entry-giftcard-message').slideUp('fast');
+        $('div#trans-entry-mock-message').slideUp('fast');
+        $('div#trans-entry-paypal-message').slideDown('slow');
+        $('input#trans-entry-right-nextbutton').hide();
+        $('input#trans-entry-right-nextbutton').fadeIn('slow');
+    });
+    
+    $('input#validate').click(function() {
+
+        $('div#valwaitting').show();
+        $('div#valresult').hide();
+
+        $.ajax({
+            type : 'POST',
+            url : '/trans-gcard-validator.php',
+            dataType : 'json',
+            data: {
+                cardNo : $('#cardNumber').val()
+            },  
+            success : function(data){
+                $('#valwaitting').hide();
+                if(data.error === false){
+                $('#valresult').removeClass().addClass('gcard-validation-result-invalid')
+                    .text(data.msg).show();
+                $('input#trans-entry-validator-inputs-next').hide();
+                }
+                else if(data.error  === false){
+                $('#valresult').removeClass().addClass('gcard-validation-result-invalid')
+                    .text(data.msg).show();
+                $('input#trans-entry-validator-inputs-next').hide();
+                }else{
+                $('#valresult').removeClass().addClass('gcard-validation-result')
+                    .text(data.msg).show();
+                $('input#trans-entry-validator-inputs-next').show();
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                $('#valwaitting').hide();
+                $('#valresult').removeClass().addClass('gcard-validation-result-invalid')
+                    .text('Invalid card number.').show();
+                $('input#trans-entry-validator-inputs-next').hide();
+            }
+        });
+        
+        return false;
+    });    
+});
+</script>
+<div class='processbar'>
+</div>
+
+<!-- BEGIN gentry-right -->
+<form action="/trans-giftcard-transaction/" method="POST">
+<div id='trans-entry-left'>
+    <div id='trans-entry-left-head'>        
+        <h1>Select a payment type?</h1>
+    </div>    
+    <div id='trans-entry-left-select'>        
+        <table id='bank-trans-entry-table'>
+            <tr>
+                <td class="leftedge" width="60">
+                <div class="bank-trans-entry-translogo">
+                <img src="/img/giftcard-icon.jpg">
+                </div></td>
+                <td width="5"><input id='bank-trans-entry-giftcard' type="radio" name='trans-type-group' value="G"  checked></td>                                
+                <td class="rightedge" width="10">Gift Card</td>
+            </tr>
+            <tr>
+                <td class="leftedge"  width="60">
+                <div class="bank-trans-entry-translogo">
+                <img src="/img/mock-icon.jpg">
+                </div></td>
+                <td width="5"><input id='bank-trans-entry-mock' type="radio" name='trans-type-group' value="M"></td>                
+                <td class="rightedge" width="352">Credit card(Mock Payment)</td>
+            </tr>
+            <tr>
+                <td class="leftedge">
+                <div class="bank-trans-entry-translogo">
+                    <img src="/img/paypal-icon.jpg">
+                </div>
+                </td>
+                <td><input id='bank-trans-entry-paypal' type="radio" name='trans-type-group' value="P">
+                </td>                
+                <td class="rightedge">Paypal</td>
+            </tr>
+        </table>
+    </div>    
+</div>
+<!-- END gentry-right -->
+
+<!-- Bank transaction div -->
+<div class="trans-entry-right" id='bank-trans-entry-right'>
+    <div class='trans-entry-rightdivs' id='trans-entry-giftcard-message'><p>You can use <b>multiple gift cards</b> within one payment and <b>the amount in each transaction can be reset</b> by entering your preferred number.</p></div>
+    <div class='trans-entry-rightdivs' id='trans-entry-mock-message'><p>You will be navigated to mock payment pages and <b>not be able to use a gift card in current payment</b>. Are you sure you would like to leave this page?</p></div>
+    <div class='trans-entry-rightdivs' id='trans-entry-paypal-message'><p>You will be navigated to paypal payment pages and <b>not be able to use a gift card in current payment</b>. Are you sure you would like to leave this page?</p></div>
+    <input id="trans-entry-right-nextbutton" type="submit" class="submit" value="Next">
+</div>
+</form>

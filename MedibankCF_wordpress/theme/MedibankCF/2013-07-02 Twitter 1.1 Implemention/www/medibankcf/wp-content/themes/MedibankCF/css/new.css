@@ -1,0 +1,231 @@
+
+* html .clearfix
+{
+	height: 1%;
+}
+
+*+html .clearfix
+ {
+  min-height: 1%;
+}
+
+/*
+    ColorBox Core Style:
+    The following CSS is consistent between example themes and should not be altered.
+*/
+#colorbox, #cboxOverlay, #cboxWrapper{position:absolute; top:0; left:0; z-index:9999; overflow:hidden;}
+#cboxOverlay{position:fixed; width:100%; height:100%;}
+#cboxMiddleLeft, #cboxBottomLeft{clear:left;}
+#cboxContent{position:relative;}
+#cboxLoadedContent{overflow:auto;}
+#cboxTitle{margin:0;}
+#cboxLoadingOverlay, #cboxLoadingGraphic{position:absolute; top:0; left:0; width:100%;}
+#cboxPrevious, #cboxNext, #cboxClose, #cboxSlideshow{cursor:pointer;}
+.cboxPhoto{float:left; margin:auto; border:0; display:block;}
+.cboxIframe{width:100%; height:100%; display:block; border:0;}
+
+/* 
+    User Style:
+    Change the following styles to modify the appearance of ColorBox.  They are
+    ordered & tabbed in a way that represents the nesting of the generated HTML.
+*/
+#cboxOverlay{background:url(../images/overlay.png) repeat 0 0;}
+#colorbox{}
+    #cboxTopLeft{width:21px; height:21px; background:url(../images/corners.png) no-repeat -10px -20px;}
+    #cboxTopRight{width:21px; height:21px; background:url(../images/corners.png) no-repeat -65px -20px;}
+    #cboxBottomLeft{width:21px; height:21px; background:url(../images/corners.png) no-repeat -10px -84px}
+    #cboxBottomRight{width:21px; height:21px; background:url(../images/corners.png) no-repeat -65px -84px;}
+    #cboxMiddleLeft{width:21px; padding-bottom: 15px; background:url(../images/controls.png) left top repeat-y;}
+    #cboxMiddleRight{width:21px; padding-bottom: 15px; background:url(../images/controls.png) right top repeat-y;}
+    #cboxTopCenter{height:21px; background:url(../images/border.png) 0 0 repeat-x;}
+    #cboxBottomCenter{height:21px; background:url(../images/border.png) 0 -29px repeat-x;}	
+    #cboxContent{background:#fff; overflow:hidden; padding-bottom: 15px; }
+    #cboxError{padding:50px; border:1px solid #ccc;}
+    #cboxLoadedContent{margin-bottom:10px;}
+    #cboxTitle{position:absolute; bottom:4px; left:0; text-align:center; width:100%; color:#949494; font-size:12px;}
+	.newTitle {font-size:12px; text-align:center; display: block; padding-top:10px;}
+    #cboxCurrent{position:absolute; bottom:4px; left:58px; color:#949494; font-size:12px; }
+    #cboxSlideshow{position:absolute; bottom:4px; right:30px; color:#0092ef; font-size:12px;}
+    #cboxPrevious{position:absolute; bottom:0; left:0; background:url(../images/controls.png) no-repeat -75px 0; width:25px; height:25px; text-indent:-9999px;}
+    #cboxPrevious.hover{background-position:-75px -25px;}
+    #cboxNext{position:absolute; bottom:0; left:27px; background:url(../images/controls.png) no-repeat -50px 0; width:25px; height:25px; text-indent:-9999px;}
+    #cboxNext.hover{background-position:-50px -25px;}
+    #cboxLoadingOverlay{background:url(../images/loading_background.png) no-repeat center center;}
+    #cboxLoadingGraphic{background:url(../images/loading.gif) no-repeat center center;}
+    #cboxClose{position:absolute; bottom:0; right:0; background:url(../images/controls.png) no-repeat -25px 0; width:25px; height:25px; text-indent:-9999px;}
+    #cboxClose.hover{background-position:-25px -25px;}
+
+/*
+  The following fixes a problem where IE7 and IE8 replace a PNG's alpha transparency with a black fill
+  when an alpha filter (opacity change) is set on the element or ancestor element.  This style is not applied to IE9.
+*/
+.cboxIE #cboxTopLeft,
+.cboxIE #cboxTopCenter,
+.cboxIE #cboxTopRight,
+.cboxIE #cboxBottomLeft,
+.cboxIE #cboxBottomCenter,
+.cboxIE #cboxBottomRight,
+.cboxIE #cboxMiddleLeft,
+.cboxIE #cboxMiddleRight {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#00FFFFFF,endColorstr=#00FFFFFF);
+}
+
+/*
+  The following provides PNG transparency support for IE6
+*/
+.cboxIE6 #cboxTopLeft{background:url(../images/ie6/borderTopLeft.png);}
+.cboxIE6 #cboxTopCenter{background:url(../images/borderTopCenter.png);}
+.cboxIE6 #cboxTopRight{background:url(../images/borderTopRight.png);}
+.cboxIE6 #cboxBottomLeft{background:url(../images/borderBottomLeft.png);}
+.cboxIE6 #cboxBottomCenter{background:url(../images/borderBottomCenter.png);}
+.cboxIE6 #cboxBottomRight{background:url(../images/borderBottomRight.png);}
+.cboxIE6 #cboxMiddleLeft{background:url(../images/borderMiddleLeft.png);}
+.cboxIE6 #cboxMiddleRight{background:url(../images/borderMiddleRight.png);}
+
+.cboxIE6 #cboxTopLeft,
+.cboxIE6 #cboxTopCenter,
+.cboxIE6 #cboxTopRight,
+.cboxIE6 #cboxBottomLeft,
+.cboxIE6 #cboxBottomCenter,
+.cboxIE6 #cboxBottomRight,
+.cboxIE6 #cboxMiddleLeft,
+.cboxIE6 #cboxMiddleRight {
+    _behavior: expression(this.src = this.src ? this.src : this.currentStyle.backgroundImage.split('"')[1], this.style.background = "none", this.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=" + this.src + ", sizingMethod='scale')");
+}
+
+.pastNews2
+{
+	width:800px;
+}
+ul.hmenu {	display: block; margin: 0; padding: 0; } /* has clearfix properties */
+ul.hmenu li{ float: left;padding: 0;list-style: none; }
+ul.hmenu li.box { float: left;	margin: 0 75px 0 0; padding: 0; list-style: none; }
+.three-colum-box li{width:160px;}
+ul.vmenu {	display: block;	margin: 0; padding: 0; } /* has clearfix properties */
+ul.vmenu li { display: block; margin: 0 0 0 0; padding: 0; list-style: none;}
+.three-column-cell li{width:165px;}
+.communityContent img
+{
+	
+
+}
+.three-column-cell img
+{
+	width:189px;
+	height:149px;
+	border: 5px solid #f2f3f5;
+	-webkit-box-shadow: 0 4px 6px -6px black;
+	-moz-box-shadow: 0 4px 6px -6px black;
+	box-shadow: 0 6px 6px -6px black;
+	margin:10px 0 10px 0;
+}
+h2.orange{color:#f3722e;}
+.view-by
+{
+	background-color:#e7f6fd;
+	-webkit-border-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width:665px;
+	padding:3px 0px 1px 5px;
+	color:#e7f6fd;
+	margin-bottom:20px;
+	margin-top:20px;
+	clear:both;
+	height:29px;
+	*height:26px;
+}
+.view-by img
+{
+	float:left;
+	margin:1px 15px 0px 2px;
+}
+
+.view-by select
+{
+	padding:4px 5px;
+	width:100px;	
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-left-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border:solid 1px #08a3db;
+	margin-right:0px;
+	height:27px;
+	float:left;
+	-webkit-appearance: menulist-button;
+	position:relative;
+}
+.view-by input
+{	
+	-webkit-border-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border:solid 1px #08a3db;
+	height:23px;
+	*height:17px;
+	float:left;
+	margin-right:10px;
+}
+.view-by input.submit
+{
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-top-right-radius: 10px;
+	border-top-right-radius: 10px;
+	-webkit-border-bottom-right-radius: 10px;
+	-moz-border-bottom-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	-webkit-border-top-left-radius: 0px;
+	-moz-border-top-left-radius: 0px;
+	border-top-left-radius: 0px;
+	-webkit-border-bottom-left-radius: 0px;
+	-moz-border-bottom-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	border-width:0px;
+	height:27px;
+	*height:21px;
+	width:38px;
+	*width:30px;
+	background-image: url('../images/ok-button.png');
+	*background-image: url('../images/ok-button-small.png');
+	color:White !important;
+	cursor:pointer;
+	float:left;
+	margin:0;
+}
+span.no-result-msg{height:400px;}
+ul.hmenu li.clearboth{clear:both;}
+
+.form-item{position:relative;}
+.form-item .field{position:relative;}
+
+.mcf-blog{margin-top:-80px;}
+
+
+/* Styles for the map on the Community Grants page */
+.two-columns { width: 100%; }
+.two-columns .left-column { width: 37%; float: left; }
+.two-columns .right-column { width: 63%; float: right; }
+.topnews img{width:300px;height:225px;margin-bottom:10px;}
+.topnews .topnewscontent{width:300px;}
+.topreadmore{margin-left:330px;}
+.newsreadmore{margin-left:207px;}
+
+
+div#medibankFeed p
+{
+       display:none ;
+       position:absolute ;
+       list-style-type:none ;
+       opacity: inherit ;
+       filter: inherit ;
+              /*opacity and filter helps fading smoothly, works for IE6,7,8*/
+}
+
+div#medibankFeed p.active
+{
+       display:block ;
+}
+
